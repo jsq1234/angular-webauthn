@@ -22,11 +22,11 @@ jobs:
         run: npm install
 
       - name: Build Angular app
-        run: npm run build -- --configuration production --base-href https://jsq1234.github.io/angular-webauthn
+        run: npm run build -- --configuration production
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist/angular-webauthn
+          publish_dir: ./angular-webauthn/dist/angular-webauthn
           publish_branch: gh-pages
