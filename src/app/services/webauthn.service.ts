@@ -13,7 +13,7 @@ export class WebauthnService {
   constructor() {}
 
   async createCredentials(user: User) {
-    console.log("Calling createCredentials");
+    console.log('Calling createCredentials');
 
     const cred = (await navigator.credentials.create({
       publicKey: {
@@ -44,7 +44,8 @@ export class WebauthnService {
 
     console.log(cred);
 
-    const authenticatorResponse = cred.response as AuthenticatorAttestationResponse;
+    const authenticatorResponse =
+      cred.response as AuthenticatorAttestationResponse;
 
     const clientDataJSONstr = this.arrayBufferToStr(
       authenticatorResponse.clientDataJSON
@@ -58,31 +59,32 @@ export class WebauthnService {
 
     const attestationObject = CBOR.decode(attestationObjectBuffer);
 
-    console.log("attestationObject: ");
+    console.log('attestationObject: ');
     console.log(attestationObject);
 
-    const authDataEncoded = new Uint8Array(attestationObject.authData);
+    const { authData } = attestationObject;
 
-    console.log("AuthData Encoded");
-    console.log(authDataEncoded);
-
-    console.log("AuthData Encoded Buffer Slice");
-    console.log(authDataEncoded.buffer.slice(authDataEncoded.byteOffset, authDataEncoded.byteLength + authDataEncoded.byteOffset));
+    const credentialIdLength = this.getCredentialIdLength(authData);
+    const credentialId: Uint8Array = authData.slice(55, 55 + credentialIdLength);
     
-    try{
-      console.log("Just buffer: ")
-      console.log(authDataEncoded.buffer);
-      
-      const authData = CBOR.decode(authDataEncoded.buffer);
-  
-      console.log("AuthData");
-      console.log(authData);
-    }catch(e) {
-      console.log(e);
-    }
+    console.log('credentialIdLength', credentialIdLength);
+    console.log('credentialId', credentialId);
+
+    const publicKeyBytes: Uint8Array = authData.slice(55 + credentialIdLength);
+    const publicKeyObject = CBOR.decode(publicKeyBytes.buffer);
+    
+    console.log('publicKeyObject', publicKeyObject);
   }
 
   arrayBufferToStr(buf: ArrayBuffer) {
     return String.fromCharCode(...new Uint8Array(buf));
+  }
+
+  getCredentialIdLength(authData: Uint8Array): number {
+    // get the length of the credential ID
+    const dataView = new DataView(new ArrayBuffer(2));
+    const idLenBytes = authData.slice(53, 55);
+    idLenBytes.forEach((value, index) => dataView.setUint8(index, value));
+    return dataView.getUint16(0);
   }
 }
