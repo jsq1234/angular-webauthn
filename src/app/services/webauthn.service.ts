@@ -5,6 +5,7 @@ import { coerceToArrayBuffer } from './utils';
 import { fromUint8Array, toBase64 } from 'js-base64';
 
 import CBOR from 'cbor-js';
+import { PublicKeyCred } from '../interfaces/public-key-cred';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ import CBOR from 'cbor-js';
 export class WebauthnService {
   constructor() {}
 
-  async createCredentials(user: User) {
+  async createCredentials(user: User) : Promise<PublicKeyCred> {
     console.log('Calling createCredentials');
 
     const cred = (await navigator.credentials.create({
@@ -72,8 +73,12 @@ export class WebauthnService {
 
     const publicKeyBytes: Uint8Array = authData.slice(55 + credentialIdLength);
     const publicKeyObject = CBOR.decode(publicKeyBytes.buffer);
+
+    console.log('publicKeyObject: ');
+    console.log(publicKeyObject);
+
+    return { credentialId, publicKey: publicKeyBytes };
     
-    console.log('publicKeyObject', publicKeyObject);
   }
 
   arrayBufferToStr(buf: ArrayBuffer) {

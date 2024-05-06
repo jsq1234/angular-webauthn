@@ -24,6 +24,8 @@ export class SignupComponent {
       name: this.userData.username,
       email: this.userData.email,
       username: this.userData.username
-    });
+    }).then((cred) => {
+      console.log(cred);
+    })
   }
 }
