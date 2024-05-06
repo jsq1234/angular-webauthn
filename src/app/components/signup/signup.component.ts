@@ -25,7 +25,7 @@ export class SignupComponent {
       email: this.userData.email,
       username: this.userData.username
     }).then((cred) => {
-      console.log(cred);
+      console.log('Credentials created', cred);
     })
   }
 }
