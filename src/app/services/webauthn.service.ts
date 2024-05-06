@@ -69,10 +69,14 @@ export class WebauthnService {
     console.log("AuthData Encoded Buffer Slice");
     console.log(authDataEncoded.buffer.slice(authDataEncoded.byteOffset, authDataEncoded.byteLength + authDataEncoded.byteOffset));
     
-    const authData = CBOR.decode(authDataEncoded.buffer);
-
-    console.log("AuthData");
-    console.log(authData);
+    try{
+      const authData = CBOR.decode(authDataEncoded.buffer);
+  
+      console.log("AuthData");
+      console.log(authData);
+    }catch(e) {
+      console.log(e);
+    }
   }
 
   arrayBufferToStr(buf: ArrayBuffer) {
