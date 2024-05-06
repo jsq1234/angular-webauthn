@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { WebauthnService } from '../../services/webauthn.service';
-import AmazonCognitoIdentity from 'amazon-cognito-identity-js';
+import {
+  CognitoUserPool,
+  CognitoUserAttribute,
+} from 'amazon-cognito-identity-js';
 
 @Component({
   selector: 'app-signup',
@@ -17,7 +20,7 @@ export class SignupComponent {
     password: '',
   };
 
-  userPool = new AmazonCognitoIdentity.CognitoUserPool({
+  userPool = new CognitoUserPool({
     UserPoolId: 'ap-south-1_56x5jYGm4',
     ClientId: '7lp0md7u0r5ljrct3lvcoctj3d',
   });
@@ -42,16 +45,13 @@ export class SignupComponent {
           Value: publicKeyCred,
         };
 
-        var attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute(
-          dataEmail
+        var attributeEmail = new CognitoUserAttribute(dataEmail);
+
+        var attributePublicKeyCred = new CognitoUserAttribute(
+          dataPublicKeyCred
         );
 
-        var attributePublicKeyCred =
-          new AmazonCognitoIdentity.CognitoUserAttribute(dataPublicKeyCred);
-
-        var attributeName = new AmazonCognitoIdentity.CognitoUserAttribute(
-          dataName
-        );
+        var attributeName = new CognitoUserAttribute(dataName);
 
         attributeList.push(attributeEmail);
         attributeList.push(attributePublicKeyCred);
@@ -63,9 +63,9 @@ export class SignupComponent {
           attributeList,
           [],
           function (err, result) {
-            if(err){
+            if (err) {
               console.log(err);
-            }else{
+            } else {
               console.log(result);
             }
           }
