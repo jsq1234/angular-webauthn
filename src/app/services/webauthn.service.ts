@@ -8,93 +8,40 @@ import { fromUint8Array, toBase64 } from 'js-base64';
   providedIn: 'root',
 })
 export class WebauthnService {
-  // f2l: Fido2Lib = new Fido2Lib({
-  //   timeout: 30 * 1000 * 60,
-  //   rpName: 'WebAuthn with Cognito',
-  //   challengeSize: 32,
-  //   cryptoParams: [-7],
-  // });
+  constructor() {}
 
-  // globalRegisteredCredentialsJSON: { credId: any, publicKey: any } | undefined;
+  async createCredentials(user: User) {
+    const cred = await navigator.credentials.create({
+      publicKey: {
+        challenge: crypto.getRandomValues(new Uint8Array(32)),
+        rp: {
+          name: 'Angular WebAuthn',
+        },
+        pubKeyCredParams: [
+          { alg: -7, type: 'public-key' },
+          { alg: -257, type: 'public-key' },
+        ],
+        user: {
+          id: coerceToArrayBuffer(user.username, 'user_id'),
+          displayName: user.name,
+          name: user.username,
+        },
+        attestation: 'direct',
+        authenticatorSelection: {
+          authenticatorAttachment: 'platform',
+          requireResidentKey: false,
+          userVerification: 'preferred',
+        },
+      },
+    }) as PublicKeyCredential;
 
-  // globalRegisteredCredentials: string | undefined;
+    const clientDataJSONstr =  this.arrayBufferToStr(cred.response.clientDataJSON);
+    const clientDataJSON = JSON.parse(clientDataJSONstr);
 
-  // constructor() {}
+    console.log(clientDataJSON);
+  }
 
-  // async createCredentials(user: User) {
-  //   try {
-  //     const attestationOptions = await this.f2l.attestationOptions();
-
-  //     attestationOptions.user = {
-  //       displayName: user.name,
-  //       id: coerceToArrayBuffer(user.username, 'username'),
-  //       name: user.username,
-  //     };
-
-  //     attestationOptions.pubKeyCredParams = [];
-
-  //     const params = [-7, -257];
-  //     for (let param of params) {
-  //       attestationOptions.pubKeyCredParams.push({
-  //         type: 'public-key',
-  //         alg: param,
-  //       });
-  //     }
-
-  //     attestationOptions.authenticatorSelection = {
-  //       authenticatorAttachment: 'platform',
-  //       userVerification: 'preferred',
-  //       requireResidentKey: false,
-  //     };
-
-  //     let challenge = coerceToArrayBuffer(toBase64(user.username), 'challenge');
-  //     attestationOptions.challenge = challenge;
-
-  //     const cred = (await navigator.credentials.create({
-  //       publicKey: attestationOptions,
-  //     })) as PublicKeyCredential;
-
-  //     const credentials = {
-  //       id: coerceToArrayBuffer(cred.id, 'credentials_id'),
-  //       rawId: cred.rawId,
-  //       type: cred.type,
-  //       challenge: challenge,
-  //       response: {
-  //         clientDataJSON: fromUint8Array(
-  //           new Uint8Array(
-  //             (cred.response as AuthenticatorAttestationResponse).clientDataJSON
-  //           )
-  //         ),
-  //         attestationObject: fromUint8Array(
-  //           new Uint8Array(
-  //             (
-  //               cred.response as AuthenticatorAttestationResponse
-  //             ).attestationObject
-  //           )
-  //         ),
-  //       },
-  //     };
-
-  //     const attestationResult = await this.f2l.attestationResult(credentials, {
-  //       challenge: fromUint8Array(new Uint8Array(challenge)),
-  //       origin: `${window.location.protocol}://${window.location.origin}`,
-  //       factor: 'either',
-  //     });
-
-  //     console.log(attestationResult);
-
-  //     this.globalRegisteredCredentialsJSON = {
-  //       credId: attestationResult.authnrData.get('credId'),
-  //       publicKey: attestationResult.authnrData.get('credentialPublicKeyPem'),
-  //     };
-
-  //     this.globalRegisteredCredentials = JSON.stringify(this.globalRegisteredCredentialsJSON);
-
-  //     console.log(this.globalRegisteredCredentialsJSON);
-  //     console.log(this.globalRegisteredCredentials);
-
-  //   } catch (e: any) {
-  //     console.error(e);
-  //   }
-  // }
+  arrayBufferToStr(buf: ArrayBuffer) {
+    return String.fromCharCode(... new Uint8Array(buf));
+  }
 }

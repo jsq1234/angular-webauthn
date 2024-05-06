@@ -20,5 +20,10 @@ export class SignupComponent {
 
   onSubmit(){
     console.log(this.userData);
+    this.webAuthnService.createCredentials({
+      name: this.userData.username,
+      email: this.userData.email,
+      username: this.userData.username
+    });
   }
 }
