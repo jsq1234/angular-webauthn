@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Build Angular app
-        run: npm run build -- --configuration production --base-ref https://jsq1234.github.io/angular-webauthn
+        run: npm run build -- --configuration production --base-href https://jsq1234.github.io/angular-webauthn
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
