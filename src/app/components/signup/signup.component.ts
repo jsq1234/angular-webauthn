@@ -48,7 +48,7 @@ export class SignupComponent {
         var attributeEmail = new CognitoUserAttribute(dataEmail);
 
         var attributePublicKeyCred = new CognitoUserAttribute(
-          dataPublicKeyCred
+          dataPublicKeyCred 
         );
 
         var attributeName = new CognitoUserAttribute(dataName);
