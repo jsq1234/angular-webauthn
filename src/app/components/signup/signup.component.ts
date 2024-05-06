@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AuthServiceService } from '../../services/auth-service.service';
+import { WebauthnService } from '../../services/webauthn.service';
 
 @Component({
   selector: 'app-signup',
@@ -16,10 +16,14 @@ export class SignupComponent {
     password: ''
   };
 
-  constructor(private authService: AuthServiceService){}
+  constructor(private webAuthnService: WebauthnService){}
 
   onSubmit(){
     console.log(this.userData);
-    this.authService.createCredentials(this.userData.username, this.userData.password, this.userData.email, this.userData.username);
+    this.webAuthnService.createCredentials({
+      name: this.userData.username,
+      email: this.userData.email,
+      username: this.userData.username
+    });
   }
 }
