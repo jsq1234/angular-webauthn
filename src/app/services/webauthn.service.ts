@@ -11,9 +11,14 @@ export class WebauthnService {
   constructor() {}
 
   async createCredentials(user: User) {
-    const cred = await navigator.credentials.create({
+    console.log("Calling createCredentials");
+
+    const cred = (await navigator.credentials.create({
       publicKey: {
-        challenge: crypto.getRandomValues(new Uint8Array(32)),
+        challenge: coerceToArrayBuffer(
+          crypto.getRandomValues(new Uint8Array(32)),
+          'challenge'
+        ),
         rp: {
           name: 'Angular WebAuthn',
         },
@@ -33,15 +38,19 @@ export class WebauthnService {
           userVerification: 'preferred',
         },
       },
-    }) as PublicKeyCredential;
+    })) as PublicKeyCredential;
 
-    const clientDataJSONstr =  this.arrayBufferToStr(cred.response.clientDataJSON);
+    console.log(cred);
+    
+    const clientDataJSONstr = this.arrayBufferToStr(
+      cred.response.clientDataJSON
+    );
     const clientDataJSON = JSON.parse(clientDataJSONstr);
 
     console.log(clientDataJSON);
   }
 
   arrayBufferToStr(buf: ArrayBuffer) {
-    return String.fromCharCode(... new Uint8Array(buf));
+    return String.fromCharCode(...new Uint8Array(buf));
   }
 }
