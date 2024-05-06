@@ -13,7 +13,7 @@ import { PublicKeyCred } from '../interfaces/public-key-cred';
 export class WebauthnService {
   constructor() {}
 
-  async createCredentials(user: User) : Promise<PublicKeyCred> {
+  async createCredentials(user: User): Promise<PublicKeyCred> {
     console.log('Calling createCredentials');
 
     const cred = (await navigator.credentials.create({
@@ -66,8 +66,11 @@ export class WebauthnService {
     const { authData } = attestationObject;
 
     const credentialIdLength = this.getCredentialIdLength(authData);
-    const credentialId: Uint8Array = authData.slice(55, 55 + credentialIdLength);
-    
+    const credentialId: Uint8Array = authData.slice(
+      55,
+      55 + credentialIdLength
+    );
+
     console.log('credentialIdLength', credentialIdLength);
     console.log('credentialId', credentialId);
 
@@ -78,7 +81,6 @@ export class WebauthnService {
     console.log(publicKeyObject);
 
     return { credentialId, publicKey: publicKeyBytes };
-    
   }
 
   arrayBufferToStr(buf: ArrayBuffer) {
