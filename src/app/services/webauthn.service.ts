@@ -63,6 +63,9 @@ export class WebauthnService {
 
     const authData = CBOR.decode(attestationObject.authData.buffer);
     
+    console.log(attestationObject.authData);
+    console.log(attestationObject.authData.buffer);
+    
     console.log("AuthData");
     console.log(authData);
   }
