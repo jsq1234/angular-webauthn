@@ -20,6 +20,5 @@ export class SignupComponent {
 
   onSubmit(){
     console.log(this.userData);
-    
   }
 }
