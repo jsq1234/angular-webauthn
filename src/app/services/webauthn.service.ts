@@ -62,6 +62,13 @@ export class WebauthnService {
     console.log(attestationObject);
 
     const authDataEncoded = new Uint8Array(attestationObject.authData);
+
+    console.log("AuthData Encoded");
+    console.log(authDataEncoded);
+
+    console.log("AuthData Encoded Buffer Slice");
+    console.log(authDataEncoded.buffer.slice(authDataEncoded.byteOffset, authDataEncoded.byteLength + authDataEncoded.byteOffset));
+    
     const authData = CBOR.decode(authDataEncoded.buffer);
 
     console.log("AuthData");
