@@ -4,6 +4,8 @@ import { User } from '../interfaces/user';
 import { coerceToArrayBuffer } from './utils';
 import { fromUint8Array, toBase64 } from 'js-base64';
 
+import CBOR from 'cbor-js';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -41,13 +43,22 @@ export class WebauthnService {
     })) as PublicKeyCredential;
 
     console.log(cred);
-    
+
+    const authenticatorResponse = cred.response as AuthenticatorAttestationResponse;
+
     const clientDataJSONstr = this.arrayBufferToStr(
-      cred.response.clientDataJSON
+      authenticatorResponse.clientDataJSON
     );
+
     const clientDataJSON = JSON.parse(clientDataJSONstr);
 
     console.log(clientDataJSON);
+
+    const attestationObjectBuffer = authenticatorResponse.attestationObject;
+
+    const attestationObject = CBOR.decode(attestationObjectBuffer);
+
+    console.log(attestationObject);
   }
 
   arrayBufferToStr(buf: ArrayBuffer) {
