@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { WebauthnService } from '../../services/webauthn.service';
 import { signUp, confirmSignUp } from 'aws-amplify/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -17,7 +18,7 @@ export class SignupComponent {
     password: '',
   };
 
-  constructor(private webAuthnService: WebauthnService) {}
+  constructor(private webAuthnService: WebauthnService, private router: Router) {}
 
   onSubmit() {
     this.webAuthnService
@@ -44,21 +45,7 @@ export class SignupComponent {
           });
 
           if(nextStep.signUpStep === 'CONFIRM_SIGN_UP'){
-            const code = window.prompt(`Enter the code sent to ${nextStep.codeDeliveryDetails.destination}`);
-            if(code !== null){
-              console.log(`/${code}/`);
-              try{
-                const { isSignUpComplete, nextStep } = await confirmSignUp({
-                  confirmationCode: code,
-                  username: userId ?? '',
-                });
-  
-                console.log(isSignUpComplete);
-                console.log(nextStep);
-              }catch(e: any){
-                console.log(e);
-              }
-            }
+            this.router.navigate([`/confirm-signup`], { queryParams: { username: userId } });
           }
         }catch(e){
           console.log(e);

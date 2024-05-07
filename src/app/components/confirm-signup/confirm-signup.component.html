@@ -1,0 +1,31 @@
+<div class="container">
+    <form #verificationForm="ngForm" (ngSubmit)="confirmSignup(verificationForm)">
+      <label>
+        Code
+        <input
+          type="text"
+          placeholder="Enter your verification code"
+          [(ngModel)]="verificationCode"
+          name="verificationCode"
+          required
+          minlength="6"
+          maxlength="6"
+          #codeInput="ngModel"
+        />
+      </label>
+      <div *ngIf="codeInput.invalid && (codeInput.dirty || codeInput.touched)">
+        <div *ngIf="codeInput.errors?.['required']" class="error-message">
+          Verification code is required.
+        </div>
+        <div *ngIf="codeInput.errors?.['minlength'] || codeInput.errors?.['maxlength']" class="error-message">
+          Verification code must be 6 characters long.
+        </div>
+      </div>
+      <div *ngIf="isInvalidCode" class="error-message">
+        Code invalid. Please try again.
+      </div>
+      <button type="submit" [disabled]="verificationForm.invalid">
+        Confirm Signup
+      </button>
+    </form>
+  </div>
