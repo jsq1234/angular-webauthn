@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { SignupComponent } from './components/signup/signup.component';
 import { Amplify } from 'aws-amplify';
 
@@ -17,7 +17,7 @@ Amplify.configure({
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SignupComponent],
+  imports: [RouterOutlet, RouterModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

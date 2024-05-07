@@ -1,11 +1,15 @@
 .signup-form {
   max-width: 400px;
+  min-width: 360px;
   margin: 0 auto;
-  margin-top: calc(50vh - 200px);
-  padding: 40px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 3.5rem;
   background-color: #0d1a24;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow:  0 0px 320px rgba(89, 188, 213, 0.258);
 }
 
 /* Form group */
@@ -27,12 +31,12 @@ input[type="email"],
 input[type="password"] {
   width: 100%;
   padding: 10px;
-  border: 1px solid #334e68;
+  border: 1px solid #788997;
   border-radius: 4px;
   box-sizing: border-box;
   font-size: 16px;
   background-color: #293a4a;
-  color: #cbd5e1;
+  color: #bdd3ef;
 }
 
 input[type="text"]:focus,
@@ -40,12 +44,12 @@ input[type="email"]:focus,
 input[type="password"]:focus {
   outline: none;
   border-color: #6c8aa8;
-  box-shadow: 0 0 5px rgba(108, 138, 168, 0.5);
+  box-shadow: inset 0 0 14px rgba(108, 138, 168, 0.5), 0 0 22px rgba(108, 138, 168, 0.5);
 }
 
 /* Error message */
 .error-message {
-  color: #f76e6e;
+  color: #ff5757;
   font-size: 14px;
   margin-top: 5px;
   margin-bottom: 2px;
@@ -57,7 +61,7 @@ input[type="password"]:focus {
   width: 100%;
   padding: 12px;
   background-color: #6c8aa8;
-  color: #f0f0f0;
+  color: aliceblue;
   border: none;
   border-radius: 4px;
   font-size: 16px;
@@ -99,4 +103,33 @@ input[type="password"]:focus {
 
 .sign-in-btn:hover {
   font-weight: 700;
+}
+
+  /* Paragraph styling */
+  p {
+    text-align: center; 
+    margin-top: 20px;
+    font-size: 16px;
+    color: aliceblue;
+  }
+
+/* Link styling */
+a {
+  color: #78A9FF;  /* Light blue link color */
+  text-decoration: none;
+}
+
+a:hover {
+  color: #93B8FF; /* Slightly brighter blue on hover */
+  text-decoration: underline; 
+}
+
+
+h1{
+  color: aliceblue;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-weight: 600;
 }
