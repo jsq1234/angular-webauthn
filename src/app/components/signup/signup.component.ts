@@ -46,7 +46,7 @@ export class SignupComponent {
           if(nextStep.signUpStep === 'CONFIRM_SIGN_UP'){
             const code = window.prompt(`Enter the code sent to ${nextStep.codeDeliveryDetails.destination}`);
             if(code !== null){
-              console.log(code);
+              console.log(`/${code}/`);
               try{
                 const { isSignUpComplete, nextStep } = await confirmSignUp({
                   confirmationCode: code,
