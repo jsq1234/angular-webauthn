@@ -45,7 +45,7 @@ export class SignupComponent {
           });
 
           if(nextStep.signUpStep === 'CONFIRM_SIGN_UP'){
-            this.router.navigate([`/confirm-signup`], { queryParams: { username: userId } });
+            this.router.navigate([`/confirm-signup`], { queryParams: { userId: userId } });
           }
         }catch(e){
           console.log(e);
