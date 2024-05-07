@@ -32,20 +32,20 @@ export class SignupComponent {
         console.log(publicKeyCred);
 
         try{
-          const { isSignUpComplete, nextStep, userId}  = await signUp({
-            username: this.userData.username,
-            password: this.userData.password,
-            options: {
-              userAttributes: {
-                email: this.userData.email,
-                'custom:publicKeyCred': publicKeyCred,
-              },
-            },
-          });
+          // const { isSignUpComplete, nextStep, userId}  = await signUp({
+          //   username: this.userData.username,
+          //   password: this.userData.password,
+          //   options: {
+          //     userAttributes: {
+          //       email: this.userData.email,
+          //       'custom:publicKeyCred': publicKeyCred,
+          //     },
+          //   },
+          // });
 
-          console.log(isSignUpComplete);
-          console.log(nextStep);
-          console.log(userId);
+          // console.log(isSignUpComplete);
+          // console.log(nextStep);
+          // console.log(userId);
         }catch(e){
           console.log(e);
         }
