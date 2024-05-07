@@ -33,7 +33,7 @@ export class ConfirmSignupComponent implements OnInit {
         username: this.username,
         confirmationCode: verificationCode,
       }).then((value) => {
-        const { isSignUpComplete, nextStep } = value;
+        const { nextStep } = value;
         if(nextStep.signUpStep === 'DONE'){
           console.log('Account confirmed.');
           this.router.navigate(['/signin']);
