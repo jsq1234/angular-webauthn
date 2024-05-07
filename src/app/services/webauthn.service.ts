@@ -30,7 +30,7 @@ export class WebauthnService {
           { alg: -257, type: 'public-key' },
         ],
         user: {
-          id: coerceToArrayBuffer(user.username, 'user_id'),
+          id: new TextEncoder().encode(user.username),
           displayName: user.name,
           name: user.username,
         },
