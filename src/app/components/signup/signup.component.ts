@@ -29,21 +29,27 @@ export class SignupComponent {
       .then(async (cred) => {
         const publicKeyCred = btoa(JSON.stringify(cred));
 
-        const { isSignUpComplete, nextStep, userId}  = await signUp({
-          username: this.userData.username,
-          password: this.userData.password,
-          options: {
-            userAttributes: {
-              email: this.userData.email,
-              'custom:publicKeyCred': publicKeyCred,
-            },
-          },
-        });
+        console.log(publicKeyCred);
 
-        console.log(isSignUpComplete);
-        console.log(nextStep);
-        console.log(userId);
-        
+        try{
+          const { isSignUpComplete, nextStep, userId}  = await signUp({
+            username: this.userData.username,
+            password: this.userData.password,
+            options: {
+              userAttributes: {
+                email: this.userData.email,
+                'custom:publicKeyCred': publicKeyCred,
+              },
+            },
+          });
+
+          console.log(isSignUpComplete);
+          console.log(nextStep);
+          console.log(userId);
+        }catch(e){
+          console.log(e);
+        }
+
       });
   }
 }
