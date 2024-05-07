@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { SignupComponent } from './components/signup/signup.component';
 import { Amplify } from 'aws-amplify';
 
@@ -21,6 +21,12 @@ Amplify.configure({
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   title = 'angular-webauthn';
+
+  constructor(private router: Router){}
+
+  ngOnInit(): void {
+    this.router.navigate(['/signup']);    
+  }
 }
