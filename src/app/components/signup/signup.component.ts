@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { WebauthnService } from '../../services/webauthn.service';
-import {
-  CognitoUserPool,
-  CognitoUserAttribute,
-} from 'amazon-cognito-identity-js';
+import { signUp } from 'aws-amplify/auth';
 
 @Component({
   selector: 'app-signup',
@@ -20,11 +17,6 @@ export class SignupComponent {
     password: '',
   };
 
-  userPool = new CognitoUserPool({
-    UserPoolId: 'ap-south-1_56x5jYGm4',
-    ClientId: '7lp0md7u0r5ljrct3lvcoctj3d',
-  });
-
   constructor(private webAuthnService: WebauthnService) {}
 
   onSubmit() {
@@ -34,42 +26,24 @@ export class SignupComponent {
         email: this.userData.email,
         username: this.userData.username,
       })
-      .then((cred) => {
+      .then(async (cred) => {
         const publicKeyCred = btoa(JSON.stringify(cred));
 
-        var attributeList = [];
-        var dataEmail = { Name: 'email', Value: this.userData.email };
-        var dataName = { Name: 'name', Value: this.userData.username };
-        var dataPublicKeyCred = {
-          Name: 'custom:publicKeyCred',
-          Value: publicKeyCred,
-        };
+        const { isSignUpComplete, nextStep, userId}  = await signUp({
+          username: this.userData.username,
+          password: this.userData.password,
+          options: {
+            userAttributes: {
+              email: this.userData.email,
+              'custom:publicKeyCred': publicKeyCred,
+            },
+          },
+        });
 
-        var attributeEmail = new CognitoUserAttribute(dataEmail);
-
-        var attributePublicKeyCred = new CognitoUserAttribute(
-          dataPublicKeyCred 
-        );
-
-        var attributeName = new CognitoUserAttribute(dataName);
-
-        attributeList.push(attributeEmail);
-        attributeList.push(attributePublicKeyCred);
-        attributeList.push(attributeName);
-
-        this.userPool.signUp(
-          this.userData.username,
-          this.userData.password,
-          attributeList,
-          [],
-          function (err, result) {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log(result);
-            }
-          }
-        );
+        console.log(isSignUpComplete);
+        console.log(nextStep);
+        console.log(userId);
+        
       });
   }
 }
