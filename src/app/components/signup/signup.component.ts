@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { WebauthnService } from '../../services/webauthn.service';
-import { signUp } from 'aws-amplify/auth';
+import { signUp, confirmSignUp } from 'aws-amplify/auth';
 
 @Component({
   selector: 'app-signup',
@@ -43,9 +43,18 @@ export class SignupComponent {
             },
           });
 
-          console.log(isSignUpComplete);
-          console.log(nextStep);
-          console.log(userId);
+          if(nextStep.signUpStep === 'CONFIRM_SIGN_UP'){
+            const code = window.prompt(`Enter the code sent to ${nextStep.codeDeliveryDetails.destination}`);
+            if(code !== null){
+              const { isSignUpComplete, nextStep } = await confirmSignUp({
+                confirmationCode: code,
+                username: userId ?? '',
+              });
+
+              console.log(isSignUpComplete);
+              console.log(nextStep);
+            }
+          }
         }catch(e){
           console.log(e);
         }
