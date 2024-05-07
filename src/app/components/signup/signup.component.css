@@ -48,6 +48,7 @@ input[type="password"]:focus {
   color: #f76e6e;
   font-size: 14px;
   margin-top: 5px;
+  margin-bottom: 2px;
 }
 
 /* Submit button */

@@ -14,13 +14,13 @@ import { confirmSignUp } from 'aws-amplify/auth';
 export class ConfirmSignupComponent implements OnInit {
   isInvalidCode = false;
   verificationCode = '';
-  userId = '';
+  username = '';
   constructor(private router: Router, private activeRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.activeRoute.queryParams.subscribe((params) => {
-      this.userId = params['userId'];
-      console.log(this.userId);
+      this.username = params['username'];
+      console.log(this.username);
     });
   }
 
@@ -30,7 +30,7 @@ export class ConfirmSignupComponent implements OnInit {
       const { verificationCode } = form.value;
 
       confirmSignUp({
-        username: this.userId,
+        username: this.username,
         confirmationCode: verificationCode,
       }).then((value) => {
         const { isSignUpComplete, nextStep } = value;
@@ -41,6 +41,10 @@ export class ConfirmSignupComponent implements OnInit {
           console.log('Account not confirmed.');
           this.isInvalidCode = true;
         }
+      }).catch((e) => {
+        console.log('Error confirming signup.');
+        console.log(e.message);
+        this.isInvalidCode = true;
       })
     }
   }

@@ -44,7 +44,7 @@ form {
   .error-message {
     color: #f76e6e;
     font-size: 14px;
-    margin-top: 5px;
+    margin: 5px 0;
   }
   
   /* Submit button */
