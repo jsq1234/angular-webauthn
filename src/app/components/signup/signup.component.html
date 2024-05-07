@@ -12,5 +12,9 @@
       <input type="password" id="password" name="password" required minlength="6" [(ngModel)]="userData.password" #password="ngModel">
     </div>
     <button type="submit" class="submit-btn">Sign Up</button>
+    <div class="sign-in-container">
+      <span>Already registered?</span>
+      <button class="sign-in-btn" (click)="navigateToSignIn()">Sign In</button>
+    </div>
 </form>
   

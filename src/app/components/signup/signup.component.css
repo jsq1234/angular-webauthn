@@ -73,3 +73,30 @@ input[type="password"]:focus {
   background-color: #546d84;
   cursor: not-allowed;
 }
+
+.sign-in-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.sign-in-container span {
+  font-size: 1rem;
+  color: #666;
+  margin-right: 0.5rem;
+}
+
+.sign-in-btn {
+  background-color: transparent;
+  border: 0px solid #666;
+  color: #666;
+  padding: 0.5rem 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sign-in-btn:hover {
+  font-weight: 700;
+}

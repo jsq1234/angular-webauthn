@@ -1,0 +1,11 @@
+<form (ngSubmit)="onSubmit()" #signupForm="ngForm" class="signup-form">
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required minlength="3" [(ngModel)]="this.userData.username" #username="ngModel">
+    </div>
+    <button type="submit" class="submit-btn">Sign In</button>
+    <div class="sign-in-container">
+      <span>New here?</span>
+      <button class="sign-in-btn" (click)="navigateToSignUp()">Sign Up</button>
+    </div>
+</form>

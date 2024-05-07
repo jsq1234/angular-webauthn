@@ -1,0 +1,102 @@
+.signup-form {
+    max-width: 400px;
+    margin: 0 auto;
+    margin-top: calc(50vh - 200px);
+    padding: 40px;
+    background-color: #0d1a24;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Form group */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  /* Form label */
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #cbd5e1;
+  }
+  
+  /* Input field */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #334e68;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    background-color: #293a4a;
+    color: #cbd5e1;
+  }
+  
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    outline: none;
+    border-color: #6c8aa8;
+    box-shadow: 0 0 5px rgba(108, 138, 168, 0.5);
+  }
+  
+  /* Error message */
+  .error-message {
+    color: #f76e6e;
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 2px;
+  }
+  
+  /* Submit button */
+  .submit-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #6c8aa8;
+    color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-btn:hover {
+    background-color: #5a7a94;
+  }
+  
+  .submit-btn:disabled {
+    background-color: #546d84;
+    cursor: not-allowed;
+  }
+  
+  .sign-in-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .sign-in-container span {
+    font-size: 1.0rem;
+    color: #666;
+    margin-right: 0.5rem;
+  }
+  
+  .sign-in-btn {
+    background-color: transparent;
+    border: 0px solid #666;
+    color: #666;
+    padding: 0.5rem 0.5rem;
+    font-size: 1.0rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .sign-in-btn:hover {
+    font-weight: 700;
+  }
