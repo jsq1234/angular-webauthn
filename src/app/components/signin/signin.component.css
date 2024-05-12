@@ -128,3 +128,11 @@ h1{
   margin-bottom: 2rem;
   font-weight: 600;
 }
+
+.verified{
+  color: #00FF00;
+  font-size: 1.15rem;
+  text-align: center;
+  margin-top: 1rem;
+  font-weight: 600;
+}

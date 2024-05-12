@@ -4,6 +4,7 @@ import { WebauthnService } from '../../services/webauthn.service';
 import { signUp, confirmSignUp } from 'aws-amplify/auth';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { fromUint8Array } from 'js-base64';
 
 @Component({
   selector: 'app-signup',
@@ -53,9 +54,14 @@ export class SignupComponent {
         username: userData.username,
       })
       .then(async (cred) => {
+
+        console.log('Before stringified cred', cred);
+
         const publicKeyCred = btoa(JSON.stringify(cred));
 
-        console.log(publicKeyCred);
+        console.log('After stringified and btoa\'ed cred: ', publicKeyCred);
+
+        localStorage.setItem('publicKey', cred.publicKey);
 
         try{
           const { isSignUpComplete, nextStep, userId}  = await signUp({

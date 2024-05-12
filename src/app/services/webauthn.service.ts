@@ -49,6 +49,9 @@ export class WebauthnService {
     const authenticatorResponse =
       cred.response as AuthenticatorAttestationResponse;
 
+    console.log('publicKeyAlgorithm: ', authenticatorResponse.getPublicKeyAlgorithm());
+    console.log('publicKey(using function)', authenticatorResponse.getPublicKey());
+
     const clientDataJSONstr = this.arrayBufferToStr(
       authenticatorResponse.clientDataJSON
     );
@@ -74,7 +77,7 @@ export class WebauthnService {
 
     console.log('credentialIdLength', credentialIdLength);
     console.log('credentialId', credentialId);
-    
+
     localStorage.setItem('credentialId', fromUint8Array(credentialId));
 
     const publicKeyBytes: Uint8Array = authData.slice(55 + credentialIdLength);
@@ -83,7 +86,11 @@ export class WebauthnService {
     console.log('publicKeyObject: ');
     console.log(publicKeyObject);
 
-    return { credentialId, publicKey: publicKeyBytes };
+    const pubKey = authenticatorResponse.getPublicKey();
+    
+    const pubKeyBase64 = pubKey ? fromUint8Array(new Uint8Array(pubKey)) : '';
+
+    return { credentialId, publicKey: pubKeyBase64 };
   }
 
   arrayBufferToStr(buf: ArrayBuffer) {
