@@ -30,6 +30,7 @@ export class SigninComponent {
       publicKey: {
         challenge: new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8]),
         userVerification: 'required',
+        rpId: window.location.hostname,
       }
     }).then((assertion) => {
       console.log('Got assertion', assertion);
