@@ -21,6 +21,7 @@
     "amazon-cognito-identity-js": "^6.3.12",
     "aws-amplify": "^6.2.0",
     "base64url": "^3.0.1",
+    "buffer": "^6.0.3",
     "cbor-js": "^0.1.0",
     "js-base64": "^3.7.7",
     "rxjs": "~7.8.0",

@@ -21,14 +21,18 @@ export class ConfirmSignupComponent implements OnInit {
     private cognitoService: CognitoService) {}
 
   ngOnInit(): void {
+    this.activeRoute.queryParams.subscribe((params) => {
+      this.username = params['username'];
+    });
   }
 
   async confirmSignup(form: NgForm) {
     if(!form.invalid){
       console.log('Confirming signup');
       const { verificationCode } = form.value;
-      const confirmed = await this.cognitoService.confirmSignUp(verificationCode);
+      const confirmed = await this.cognitoService.confirmSignUp(this.username, verificationCode);
       if(confirmed){
+        console.log('User confirmed!');
         this.router.navigate(['/signin']);
       }
     }

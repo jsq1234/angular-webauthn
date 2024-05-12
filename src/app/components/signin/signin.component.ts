@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { toUint8Array, fromUint8Array } from 'js-base64';
 import { signIn, confirmSignIn, } from 'aws-amplify/auth';
+import { CognitoService } from '../../services/cognito.service';
 
 @Component({
   selector: 'app-signin',
@@ -18,8 +19,9 @@ export class SigninComponent {
   };
 
   userVerified = false;
+  invalidUser = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private cognitoService: CognitoService) {}
 
   navigateToSignUp() {
     this.router.navigate(['/signup']);
@@ -66,15 +68,24 @@ export class SigninComponent {
     //     });
     //   });
 
-    const { isSignedIn, nextStep } = await signIn({
-      username: this.userData.username,
-      options: {
-        authFlowType: 'CUSTOM_WITHOUT_SRP',
-      },
-    });
+    // const { isSignedIn, nextStep } = await signIn({
+    //   username: this.userData.username,
+    //   options: {
+    //     authFlowType: 'CUSTOM_WITHOUT_SRP',
+    //   },
+    // });
 
-    if(!isSignedIn && nextStep.signInStep === "CONFIRM_SIGN_IN_WITH_CUSTOM_CHALLENGE"){
-      console.log('custom!');
+    // if(!isSignedIn && nextStep.signInStep === "CONFIRM_SIGN_IN_WITH_CUSTOM_CHALLENGE"){
+    //   console.log('custom!');
+    // }
+
+    try{
+      const authTokens = await this.cognitoService.signIn(this.userData.username, '');
+      console.log('authTokens', authTokens);
+      this.userVerified = true;
+    }catch(e){
+      console.log(e);
+      this.invalidUser = true;
     }
   }
 

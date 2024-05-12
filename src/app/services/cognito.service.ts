@@ -4,11 +4,15 @@ import {
   CognitoUser,
   CognitoUserPool,
   CognitoUserAttribute,
-
+  IAuthenticationCallback,
 } from 'amazon-cognito-identity-js';
 import { User } from '../interfaces/user';
 import { PublicKeyCred } from '../interfaces/public-key-cred';
-import { toBase64 } from 'js-base64';
+import { fromUint8Array, toBase64, toUint8Array } from 'js-base64';
+import { AuthTokens } from '../interfaces/auth-tokens';
+import { Buffer } from 'buffer';
+
+window.Buffer = Buffer;
 
 @Injectable({
   providedIn: 'root',
@@ -23,9 +27,11 @@ export class CognitoService {
 
   constructor() {}
 
-  signUp(user: User, publicKeyCred: PublicKeyCred) : Promise<CognitoUser | undefined>{
+  signUp(
+    user: User,
+    publicKeyCred: PublicKeyCred
+  ): Promise<CognitoUser | undefined> {
     return new Promise((resolve, reject) => {
-
       const publickKeyCredBase64 = toBase64(JSON.stringify(publicKeyCred));
 
       let attributeList: CognitoUserAttribute[] = [];
@@ -66,25 +72,110 @@ export class CognitoService {
     });
   }
 
-  async confirmSignUp(code: string) : Promise<Boolean> {
+  async confirmSignUp(username: string, code: string): Promise<Boolean> {
     return new Promise((resolve, reject) => {
-      if(!this.cognitoUser){
-        console.log('No user to confirm');
-        alert('No user to confirm');
-        reject('No user to confirm');
-        return ;
-      }
-  
-      this.cognitoUser.confirmRegistration(code, true, (err, result) => {
+      const cognitoUser = new CognitoUser({
+        Username: username,
+        Pool: this.userPool,
+      });
+
+      cognitoUser.confirmRegistration(code, true, (err, result) => {
         if (err) {
           console.log(err.message || JSON.stringify(err));
           reject('failed');
           return;
         }
-        console.log('call result: ' + result);
         resolve(true);
       });
-    })
+    });
   }
-  
+
+  signIn(username: string, password: string): Promise<AuthTokens> {
+    return new Promise((resolve, reject) => {
+      const authenticationDetails = new AuthenticationDetails({
+        Username: username,
+        Password: password,
+      });
+
+      const cognitoUser = new CognitoUser({
+        Username: username,
+        Pool: this.userPool,
+      });
+
+      const authCallback: IAuthenticationCallback = {
+        onSuccess: function (result) {
+          let accessToken = result.getAccessToken().getJwtToken();
+          let idToken = result.getIdToken().getJwtToken();
+          let refreshToken = result.getRefreshToken().getToken();
+          let expiresIn = result.getAccessToken().getExpiration();
+
+          resolve({
+            accessToken,
+            idToken,
+            refreshToken,
+            expiresIn,
+          });
+        },
+        onFailure: function (err) {
+          console.log(err.message || JSON.stringify(err));
+          reject(err);
+        },
+        customChallenge: async function (challengeParameters) {
+          console.log('Custom challenge from Cognito: ');
+          console.log(challengeParameters);
+
+          
+          const publicKeyOptions: PublicKeyCredentialRequestOptions = {
+            challenge: window.Buffer.from(challengeParameters.challenge, 'hex'),
+            timeout: 1800000,
+            rpId: window.location.hostname,
+            userVerification: 'preferred',
+            allowCredentials: [
+              {
+                id: toUint8Array(challengeParameters.credId),
+                type: 'public-key',
+              },
+            ],
+          };
+
+          const credentials = await navigator.credentials.get({
+            publicKey: publicKeyOptions,
+          });
+
+          const response = (credentials as any)
+            .response as AuthenticatorAssertionResponse;
+
+          const challengeAnswer = {
+            response: {},
+          };
+
+          const clientData = JSON.parse(
+            new TextDecoder().decode(response.clientDataJSON)
+          );
+          const authenticatorData = new Uint8Array(response.authenticatorData);
+          const signature = new Uint8Array(response.signature);
+          const userHandle = new Uint8Array(
+            response.userHandle ?? new Uint8Array(0)
+          );
+
+          if (response) {
+            challengeAnswer.response = {
+              clientDataJSON: toBase64(JSON.stringify(clientData)),
+              authenticatorData: fromUint8Array(authenticatorData),
+              signature: fromUint8Array(signature),
+              userHandle: fromUint8Array(userHandle),
+            };
+          }
+
+          cognitoUser.sendCustomChallengeAnswer(
+            JSON.stringify(challengeAnswer),
+            this
+          );
+        },
+      };
+
+      cognitoUser.setAuthenticationFlowType('CUSTOM_AUTH');
+      cognitoUser.initiateAuth(authenticationDetails, authCallback);
+    });
+  }
 }

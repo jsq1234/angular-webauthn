@@ -136,3 +136,11 @@ h1{
   margin-top: 1rem;
   font-weight: 600;
 }
+
+.not-verified{
+  color: #FF0000;
+  font-size: 1.15rem;
+  text-align: center;
+  margin-top: 1rem;
+  font-weight: 600;
+}
