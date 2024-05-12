@@ -78,8 +78,6 @@ export class WebauthnService {
     console.log('credentialIdLength', credentialIdLength);
     console.log('credentialId', credentialId);
 
-    localStorage.setItem('credentialId', fromUint8Array(credentialId));
-
     const publicKeyBytes: Uint8Array = authData.slice(55 + credentialIdLength);
     const publicKeyObject = CBOR.decode(publicKeyBytes.buffer);
 
@@ -89,8 +87,9 @@ export class WebauthnService {
     const pubKey = authenticatorResponse.getPublicKey();
     
     const pubKeyBase64 = pubKey ? fromUint8Array(new Uint8Array(pubKey)) : '';
+    const credentialIdBase64 = fromUint8Array(credentialId);
 
-    return { credentialId, publicKey: pubKeyBase64 };
+    return { credentialId: credentialIdBase64, publicKey: pubKeyBase64 };
   }
 
   arrayBufferToStr(buf: ArrayBuffer) {

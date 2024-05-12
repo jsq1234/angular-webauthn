@@ -8,8 +8,8 @@ Amplify.configure({
     Cognito: {
       userPoolId: 'ap-south-1_56x5jYGm4',
       userPoolClientId: '7lp0md7u0r5ljrct3lvcoctj3d',
-      signUpVerificationMethod: 'code'
-    }
+      signUpVerificationMethod: 'code',
+    },
   },
 });
 

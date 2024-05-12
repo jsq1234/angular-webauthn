@@ -1,4 +1,4 @@
 export interface PublicKeyCred {
-    credentialId: Uint8Array;
+    credentialId: string;
     publicKey: string;  
 }
