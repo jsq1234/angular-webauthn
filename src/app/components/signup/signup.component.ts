@@ -1,31 +1,56 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { WebauthnService } from '../../services/webauthn.service';
 import { signUp, confirmSignUp } from 'aws-amplify/auth';
 import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [RouterLink, ReactiveFormsModule, CommonModule],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css',
 })
 export class SignupComponent {
-  userData = {
-    username: '',
-    email: '',
-    password: '',
-  };
+  
+  myForm = this.formBuilder.group({
+    username: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required],
+  });
 
-  constructor(private webAuthnService: WebauthnService, private router: Router) {}
+  constructor(
+    private webAuthnService: WebauthnService, 
+    private router: Router,
+    private formBuilder: FormBuilder) {}
+
+  get email(){
+    return this.myForm.controls['email'];
+  }
+
+  get username(){
+    return this.myForm.controls['username'];
+  }
+
+  get password(){
+    return this.myForm.controls['password'];
+  }
 
   onSubmit() {
+    const { email, password, username } = this.myForm.value;
+
+    const userData = {
+      email : email ?? '',
+      password: password ?? '',
+      username: username ?? '',
+    };
+
     this.webAuthnService
       .createCredentials({
-        name: this.userData.username,
-        email: this.userData.email,
-        username: this.userData.username,
+        name: userData.username,
+        email: userData.email,
+        username: userData.username,
       })
       .then(async (cred) => {
         const publicKeyCred = btoa(JSON.stringify(cred));
@@ -34,18 +59,18 @@ export class SignupComponent {
 
         try{
           const { isSignUpComplete, nextStep, userId}  = await signUp({
-            username: this.userData.username,
-            password: this.userData.password,
+            username: userData.username,
+            password: userData.password,
             options: {
               userAttributes: {
-                email: this.userData.email,
+                email: userData.email,
                 'custom:publicKeyCred': publicKeyCred,
               },
             },
           });
 
           if(nextStep.signUpStep === 'CONFIRM_SIGN_UP'){
-            this.router.navigate([`/confirm-signup`], { queryParams: { username: this.userData.username } });
+            this.router.navigate([`/confirm-signup`], { queryParams: { username: userData.username } });
           }
         }catch(e){
           console.log(e);

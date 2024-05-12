@@ -133,3 +133,10 @@ h1{
   margin-bottom: 2rem;
   font-weight: 600;
 }
+
+.alert{
+  color: #ff5757;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 2px;
+}

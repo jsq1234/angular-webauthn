@@ -1,20 +1,50 @@
-<form (ngSubmit)="onSubmit()" #signupForm="ngForm" class="signup-form">
+<form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="signup-form">
     <h1>
       Sign Up
     </h1>
     <div class="form-group">
       <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required minlength="3" [(ngModel)]="userData.username" #username="ngModel">
+      <input 
+        type="text" 
+        id="username"
+        name="username" 
+        required 
+        formControlName="username"
+      />
+      <div *ngIf="username.invalid && (username.dirty || username.touched)"  class="alert">
+        <div *ngIf="username.errors?.['required']" >Username is required.</div>
+      </div>
     </div>
     <div class="form-group">
       <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required email [(ngModel)]="userData.email" #email="ngModel">
+      <input 
+        type="email" 
+        id="email" 
+        name="email" 
+        required
+        formControlName="email"
+      />
+      <div *ngIf="email.invalid && (email.dirty || email.touched)" class="alert">
+        <div *ngIf="email.errors?.['required']">Email is required.</div>
+        <div *ngIf="email.errors?.['email']">Invalid email format.</div>
+        <!-- Add more validation error messages for email if needed -->
+      </div>
     </div>
     <div class="form-group">
       <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required minlength="6" [(ngModel)]="userData.password" #password="ngModel">
+      <input 
+        type="password" 
+        id="password" 
+        name="password" 
+        required
+        formControlName="password"
+      />
+      <div *ngIf="password.invalid && (password.dirty || password.touched)" class="alert">
+        <div *ngIf="password.errors?.['required']">Password is required.</div>
+        <!-- Add more validation error messages for password if needed -->
+      </div>
     </div>
-    <button type="submit" class="submit-btn">Sign Up</button>
+    <button type="submit" class="submit-btn" [disabled]="myForm.invalid">Sign Up</button>
     <p>
       Already registered? <a [routerLink]="['/signin']">Sign In</a>
     </p>

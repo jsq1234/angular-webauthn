@@ -11,3 +11,8 @@
       Don't have an account? <a [routerLink]="['/signup']">Register</a>
     </p>
 </form>
+
+<div *ngIf="clientData !== ''">{{ clientData }}</div>
+<div *ngIf="authenticatorData !== ''">{{ authenticatorData }}</div>
+<div *ngIf="userHandle !== ''">{{ userHandle }}</div>
+<div *ngIf="signature !== ''">{{ signature }}</div>
