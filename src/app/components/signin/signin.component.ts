@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterModule } from '@angular/router';
+import { toUint8Array } from 'js-base64';
 
 @Component({
   selector: 'app-signin',
@@ -31,6 +32,12 @@ export class SigninComponent {
         challenge: new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8]),
         userVerification: 'required',
         rpId: window.location.hostname,
+        allowCredentials: [
+          {
+            id: toUint8Array(localStorage.getItem('credentialId') ?? ''),
+            type: 'public-key'
+          }
+        ]
       }
     }).then((assertion) => {
       console.log('Got assertion', assertion);
