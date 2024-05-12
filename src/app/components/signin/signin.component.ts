@@ -29,7 +29,6 @@ export class SigninComponent {
     navigator.credentials.get({
       publicKey: {
         challenge: new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8]),
-        rpId: 'localhost',
         userVerification: 'required',
       }
     }).then((assertion) => {
