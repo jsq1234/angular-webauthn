@@ -13,6 +13,9 @@ import { PublicKeyCred } from '../interfaces/public-key-cred';
 export class WebauthnService {
   constructor() {}
 
+  publicKeyCredential : any;
+  clientDataJSON: any;
+
   async createCredentials(user: User): Promise<PublicKeyCred> {
     console.log('Calling createCredentials');
 
@@ -59,6 +62,8 @@ export class WebauthnService {
 
     console.log(clientDataJSON);
 
+    this.clientDataJSON = clientDataJSON;
+
     const attestationObjectBuffer = authenticatorResponse.attestationObject;
 
     const attestationObject = CBOR.decode(attestationObjectBuffer);
@@ -82,6 +87,8 @@ export class WebauthnService {
 
     console.log('publicKeyObject: ');
     console.log(publicKeyObject);
+
+    this.publicKeyCredential = publicKeyObject;
 
     const pubKey = authenticatorResponse.getPublicKey();
     

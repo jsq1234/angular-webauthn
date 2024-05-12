@@ -27,6 +27,9 @@ export class SignupComponent {
     password: ['', Validators.required],
   });
 
+  clientDataJSON: any = '';
+  publicKeyCredential: any = '';
+
   constructor(
     private webAuthnService: WebauthnService,
     private router: Router,
@@ -65,6 +68,9 @@ export class SignupComponent {
     localStorage.setItem('PublicKey', publicKeyCred.publicKey);
     localStorage.setItem('CredentialId', publicKeyCred.credentialId);
 
+    this.clientDataJSON = JSON.stringify(this.webAuthnService.clientDataJSON);
+    this.publicKeyCredential = JSON.stringify(this.webAuthnService.publicKeyCredential);
+
     const cognitoUser = await this.cognitoService.signUp(
       { name: userData.username, ...userData },
       publicKeyCred
@@ -73,9 +79,9 @@ export class SignupComponent {
     if (cognitoUser) {
       console.log('User signed up successfully.');
       console.log('Username: ', cognitoUser.getUsername());
-      this.router.navigate(['/confirm-signup'], {
-        queryParams: { username: userData.username },
-      });
+      // this.router.navigate(['/confirm-signup'], {
+      //   queryParams: { username: userData.username },
+      // });
     }
 
   }
