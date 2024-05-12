@@ -25,7 +25,7 @@ export class SigninComponent {
     this.router.navigate(['/signup']);
   }
 
-  async onSubmit(){
+  onSubmit(){
     navigator.credentials.get({
       publicKey: {
         challenge: new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8]),
