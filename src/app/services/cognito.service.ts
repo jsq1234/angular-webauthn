@@ -152,6 +152,7 @@ export class CognitoService {
           const clientData = JSON.parse(
             new TextDecoder().decode(response.clientDataJSON)
           );
+          
           const authenticatorData = new Uint8Array(response.authenticatorData);
           const signature = new Uint8Array(response.signature);
           const userHandle = new Uint8Array(

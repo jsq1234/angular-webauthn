@@ -79,9 +79,9 @@ export class SignupComponent {
     if (cognitoUser) {
       console.log('User signed up successfully.');
       console.log('Username: ', cognitoUser.getUsername());
-      // this.router.navigate(['/confirm-signup'], {
-      //   queryParams: { username: userData.username },
-      // });
+      this.router.navigate(['/confirm-signup'], {
+        queryParams: { username: userData.username },
+      });
     }
 
   }
