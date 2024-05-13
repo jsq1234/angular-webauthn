@@ -37,7 +37,7 @@ export class WebauthnService {
           displayName: user.name,
           name: user.username,
         },
-        attestation: 'direct',
+        attestation: 'none',
         authenticatorSelection: {
           authenticatorAttachment: 'platform',
           requireResidentKey: false,
