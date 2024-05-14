@@ -145,6 +145,8 @@ export class CognitoService {
             publicKey: publicKeyOptions,
           });
 
+          console.log(credentials);
+
           const response = (credentials as any)
             .response as AuthenticatorAssertionResponse;
 
@@ -171,6 +173,8 @@ export class CognitoService {
             };
           }
 
+          console.log('challengeAnswer: ', challengeAnswer);
+          
           cognitoUser.sendCustomChallengeAnswer(
             JSON.stringify(challengeAnswer),
             this

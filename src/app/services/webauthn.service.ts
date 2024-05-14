@@ -89,7 +89,7 @@ export class WebauthnService {
     console.log('parsedAuthData: ', parsedAuthData);
 
     alert('parsed authData: ' + JSON.stringify(parsedAuthData));
-    
+
     const credentialId = parsedAuthData.credId;
 
     // const credentialIdLength = this.getCredentialIdLength(authData);
@@ -110,6 +110,9 @@ export class WebauthnService {
     // this.publicKeyCredential = publicKeyObject;
 
     const pubKey = authenticatorResponse.getPublicKey();
+
+    console.log('Algorithm: ', authenticatorResponse.getPublicKeyAlgorithm());
+    console.log('Transports: ', authenticatorResponse.getTransports().join(','));
 
     const pubKeyBase64Url = pubKey ? toBase64url(pubKey) : '';
 
