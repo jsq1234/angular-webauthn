@@ -11,7 +11,7 @@ import { PublicKeyCred } from '../interfaces/public-key-cred';
 import { fromUint8Array, toBase64, toUint8Array } from 'js-base64';
 import { AuthTokens } from '../interfaces/auth-tokens';
 import { Buffer } from 'buffer';
-import { toBase64url } from './utils';
+import { parseAuthData, parseBase64url, toBase64url } from './utils';
 
 window.Buffer = Buffer;
 
@@ -135,7 +135,7 @@ export class CognitoService {
             userVerification: 'preferred',
             allowCredentials: [
               {
-                id: toUint8Array(challengeParameters.credId),
+                id: parseBase64url(challengeParameters.credId),
                 type: 'public-key',
               },
             ],
@@ -164,6 +164,10 @@ export class CognitoService {
             response.userHandle ?? new Uint8Array(0)
           );
 
+          const parsedAuthData = parseAuthData(authenticatorData);
+
+          console.log('parsedAuthData: ', parsedAuthData);
+
           if (response) {
             challengeAnswer.response = {
               clientDataJSON: toBase64(JSON.stringify(clientData), true),
@@ -174,7 +178,7 @@ export class CognitoService {
           }
 
           console.log('challengeAnswer: ', challengeAnswer);
-          
+
           cognitoUser.sendCustomChallengeAnswer(
             JSON.stringify(challengeAnswer),
             this
