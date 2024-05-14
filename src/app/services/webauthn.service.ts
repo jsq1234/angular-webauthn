@@ -92,6 +92,9 @@ export class WebauthnService {
 
     console.log('COSEKey(ArrayBuffer): ', parsedAuthData.COSEPublicKey);
     console.log('COSEkey: ', COSEkey);
+    if(parsedAuthData.COSEPublicKey){
+      console.log('CBOR decoded key: ', CBOR.decode(parsedAuthData.COSEPublicKey));
+    }
 
     alert('parsed authData: ' + JSON.stringify(parsedAuthData));
 
