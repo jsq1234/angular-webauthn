@@ -117,6 +117,19 @@ export const parseAuthData = (authData: ArrayBuffer) => {
 
   console.log('length of authData', authData.byteLength);
 
+  if(!at || authData.byteLength === 0){
+    return {
+      rpIdHash,
+      flags: {
+        up,
+        uv,
+        at,
+        ed
+      },
+      counter,
+    }
+  }
+
   let aaguidBuffer = authData.slice(0, 16);
 
   authData = authData.slice(16);

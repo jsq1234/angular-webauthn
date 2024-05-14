@@ -90,6 +90,9 @@ export class WebauthnService {
 
     alert('parsed authData: ' + JSON.stringify(parsedAuthData));
 
+    if(!parsedAuthData.credId){
+      throw new Error('Couldn\'t fetch credential ID. Auth data doesn\'t have it');
+    }
     const credentialId = parsedAuthData.credId;
 
     // const credentialIdLength = this.getCredentialIdLength(authData);
