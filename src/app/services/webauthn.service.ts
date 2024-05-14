@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { User } from '../interfaces/user';
-//import { Fido2Lib } from 'fido2-lib';
-import { coerceToArrayBuffer } from './utils';
-import { fromUint8Array, toBase64 } from 'js-base64';
+import { parseAuthData, toBase64url } from './utils';
+import { fromUint8Array} from 'js-base64';
 
 import CBOR from 'cbor-js';
 import { PublicKeyCred } from '../interfaces/public-key-cred';
+import base64url from 'base64url';
+
 
 @Injectable({
   providedIn: 'root',
@@ -13,25 +14,23 @@ import { PublicKeyCred } from '../interfaces/public-key-cred';
 export class WebauthnService {
   constructor() {}
 
-  publicKeyCredential : any;
+  publicKeyCredential: any;
   clientDataJSON: any;
+  attestationObject: any;
 
   async createCredentials(user: User): Promise<PublicKeyCred> {
     console.log('Calling createCredentials');
 
+    const challenge = crypto.getRandomValues(new Uint8Array(32));
+    
     const cred = (await navigator.credentials.create({
       publicKey: {
-        challenge: coerceToArrayBuffer(
-          crypto.getRandomValues(new Uint8Array(32)),
-          'challenge'
-        ),
+        challenge: challenge,
         rp: {
           name: 'Angular WebAuthn',
           id: window.location.hostname,
         },
-        pubKeyCredParams: [
-          { alg: -7, type: 'public-key' },
-        ],
+        pubKeyCredParams: [{ alg: -7, type: 'public-key' }],
         user: {
           id: new TextEncoder().encode(user.username),
           displayName: user.name,
@@ -51,14 +50,22 @@ export class WebauthnService {
     const authenticatorResponse =
       cred.response as AuthenticatorAttestationResponse;
 
-    console.log('publicKeyAlgorithm: ', authenticatorResponse.getPublicKeyAlgorithm());
-    console.log('publicKey(using function)', authenticatorResponse.getPublicKey());
-
     const clientDataJSONstr = this.arrayBufferToStr(
       authenticatorResponse.clientDataJSON
     );
 
     const clientDataJSON = JSON.parse(clientDataJSONstr);
+
+    if (
+      clientDataJSON.challenge ===
+      base64url.fromBase64(fromUint8Array(challenge))
+    ) {
+      console.log('Challenge is correct');
+    }
+
+    if (clientDataJSON.type === 'webauthn.create') {
+      console.log('Type is correct');
+    }
 
     console.log(clientDataJSON);
 
@@ -71,31 +78,40 @@ export class WebauthnService {
     console.log('attestationObject: ');
     console.log(attestationObject);
 
-    const { authData } = attestationObject;
+    this.attestationObject = attestationObject;
 
-    const credentialIdLength = this.getCredentialIdLength(authData);
-    const credentialId: Uint8Array = authData.slice(
-      55,
-      55 + credentialIdLength
-    );
+    const authData = authenticatorResponse.getAuthenticatorData();
 
-    console.log('credentialIdLength', credentialIdLength);
-    console.log('credentialId', credentialId);
+    console.log('AuthData: ', authData);
 
-    const publicKeyBytes: Uint8Array = authData.slice(55 + credentialIdLength);
-    const publicKeyObject = CBOR.decode(publicKeyBytes.buffer);
+    const parsedAuthData = parseAuthData(authData);
 
-    console.log('publicKeyObject: ');
-    console.log(publicKeyObject);
+    console.log('parsedAuthData: ', parsedAuthData);
 
-    this.publicKeyCredential = publicKeyObject;
+    const credentialId = parsedAuthData.credId;
+
+    // const credentialIdLength = this.getCredentialIdLength(authData);
+    // const credentialId: Uint8Array = authData.slice(
+    //   55,
+    //   55 + credentialIdLength
+    // );
+
+    // console.log('credentialIdLength', credentialIdLength);
+    // console.log('credentialId', credentialId);
+
+    // const publicKeyBytes: Uint8Array = authData.slice(55 + credentialIdLength);
+    // const publicKeyObject = CBOR.decode(publicKeyBytes.buffer);
+
+    // console.log('publicKeyObject: ');
+    // console.log(publicKeyObject);
+
+    // this.publicKeyCredential = publicKeyObject;
 
     const pubKey = authenticatorResponse.getPublicKey();
-    
-    const pubKeyBase64 = pubKey ? fromUint8Array(new Uint8Array(pubKey)) : '';
-    const credentialIdBase64 = fromUint8Array(credentialId);
 
-    return { credentialId: credentialIdBase64, publicKey: pubKeyBase64 };
+    const pubKeyBase64Url = pubKey ? toBase64url(pubKey) : '';
+
+    return { credentialId, publicKey: pubKeyBase64Url };
   }
 
   arrayBufferToStr(buf: ArrayBuffer) {

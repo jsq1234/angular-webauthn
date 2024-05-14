@@ -11,6 +11,7 @@ import { PublicKeyCred } from '../interfaces/public-key-cred';
 import { fromUint8Array, toBase64, toUint8Array } from 'js-base64';
 import { AuthTokens } from '../interfaces/auth-tokens';
 import { Buffer } from 'buffer';
+import { toBase64url } from './utils';
 
 window.Buffer = Buffer;
 
@@ -32,7 +33,9 @@ export class CognitoService {
     publicKeyCred: PublicKeyCred
   ): Promise<CognitoUser | undefined> {
     return new Promise((resolve, reject) => {
-      const publickKeyCredBase64 = toBase64(JSON.stringify(publicKeyCred));
+      const publickKeyCredBase64url = toBase64url(JSON.stringify(publicKeyCred));
+
+      console.log('publicKeyCred(Base64url): ', publickKeyCredBase64url);
 
       let attributeList: CognitoUserAttribute[] = [];
 
@@ -46,7 +49,7 @@ export class CognitoService {
       attributeList.push(
         new CognitoUserAttribute({
           Name: 'custom:publicKeyCred',
-          Value: publickKeyCredBase64,
+          Value: publickKeyCredBase64url,
         })
       );
 
@@ -161,10 +164,10 @@ export class CognitoService {
 
           if (response) {
             challengeAnswer.response = {
-              clientDataJSON: toBase64(JSON.stringify(clientData)),
-              authenticatorData: fromUint8Array(authenticatorData),
-              signature: fromUint8Array(signature),
-              userHandle: fromUint8Array(userHandle),
+              clientDataJSON: toBase64(JSON.stringify(clientData), true),
+              authenticatorData: fromUint8Array(authenticatorData, true),
+              signature: fromUint8Array(signature, true),
+              userHandle: fromUint8Array(userHandle, true),
             };
           }
 

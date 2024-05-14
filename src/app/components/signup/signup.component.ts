@@ -12,6 +12,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { fromUint8Array, toBase64 } from 'js-base64';
 import { CognitoService } from '../../services/cognito.service';
+import { parseBase64url, toBase64url } from '../../services/utils';
 
 @Component({
   selector: 'app-signup',
@@ -70,7 +71,8 @@ export class SignupComponent {
 
     this.clientDataJSON = JSON.stringify(this.webAuthnService.clientDataJSON);
     this.publicKeyCredential = JSON.stringify(this.webAuthnService.publicKeyCredential);
-
+    
+    alert(JSON.stringify(this.webAuthnService.clientDataJSON));
     const cognitoUser = await this.cognitoService.signUp(
       { name: userData.username, ...userData },
       publicKeyCred
