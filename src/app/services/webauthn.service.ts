@@ -88,6 +88,11 @@ export class WebauthnService {
 
     console.log('parsedAuthData: ', parsedAuthData);
 
+    const COSEkey = toBase64url(parsedAuthData.COSEPublicKey ?? '');
+
+    console.log('COSEKey(ArrayBuffer): ', parsedAuthData.COSEPublicKey);
+    console.log('COSEkey: ', COSEkey);
+
     alert('parsed authData: ' + JSON.stringify(parsedAuthData));
 
     if(!parsedAuthData.credId){
@@ -119,7 +124,7 @@ export class WebauthnService {
 
     const pubKeyBase64Url = pubKey ? toBase64url(pubKey) : '';
 
-    return { credentialId, publicKey: pubKeyBase64Url };
+    return { credentialId, publicKey: COSEkey };
   }
 
   arrayBufferToStr(buf: ArrayBuffer) {
