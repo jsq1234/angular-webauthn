@@ -33,7 +33,9 @@ export class CognitoService {
     publicKeyCred: PublicKeyCred
   ): Promise<CognitoUser | undefined> {
     return new Promise((resolve, reject) => {
-      const publickKeyCredBase64url = toBase64url(JSON.stringify(publicKeyCred));
+      const publickKeyCredBase64url = toBase64url(
+        JSON.stringify(publicKeyCred)
+      );
 
       console.log('publicKeyCred(Base64url): ', publickKeyCredBase64url);
 
@@ -127,7 +129,6 @@ export class CognitoService {
           console.log('Custom challenge from Cognito: ');
           console.log(challengeParameters);
 
-          
           const publicKeyOptions: PublicKeyCredentialRequestOptions = {
             challenge: window.Buffer.from(challengeParameters.challenge, 'hex'),
             timeout: 1800000,
@@ -137,18 +138,19 @@ export class CognitoService {
               {
                 id: parseBase64url(challengeParameters.credId),
                 type: 'public-key',
+                transports: ['internal']
               },
             ],
           };
 
-          const credentials = await navigator.credentials.get({
+          const credentials = (await navigator.credentials.get({
             publicKey: publicKeyOptions,
-          });
+          })) as PublicKeyCredential;
 
           console.log('Get credentials: ', credentials);
 
-          const response = (credentials as any)
-            .response as AuthenticatorAssertionResponse;
+          const response =
+            credentials.response as AuthenticatorAssertionResponse;
 
           const challengeAnswer = {
             response: {},
@@ -156,13 +158,12 @@ export class CognitoService {
 
           console.log('response: ', response);
 
-          
           const clientData = JSON.parse(
             new TextDecoder().decode(response.clientDataJSON)
           );
 
           console.log(clientData);
-          
+
           const authenticatorData = new Uint8Array(response.authenticatorData);
           const signature = new Uint8Array(response.signature);
           const userHandle = new Uint8Array(
