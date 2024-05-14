@@ -145,7 +145,7 @@ export class CognitoService {
             publicKey: publicKeyOptions,
           });
 
-          console.log(credentials);
+          console.log('Get credentials: ', credentials);
 
           const response = (credentials as any)
             .response as AuthenticatorAssertionResponse;
@@ -154,9 +154,14 @@ export class CognitoService {
             response: {},
           };
 
+          console.log('response: ', response);
+
+          
           const clientData = JSON.parse(
             new TextDecoder().decode(response.clientDataJSON)
           );
+
+          console.log(clientData);
           
           const authenticatorData = new Uint8Array(response.authenticatorData);
           const signature = new Uint8Array(response.signature);
