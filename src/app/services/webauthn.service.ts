@@ -22,7 +22,7 @@ export class WebauthnService {
     console.log('Calling createCredentials');
 
     const challenge = crypto.getRandomValues(new Uint8Array(32));
-    
+
     const cred = (await navigator.credentials.create({
       publicKey: {
         challenge: challenge,
@@ -88,6 +88,8 @@ export class WebauthnService {
 
     console.log('parsedAuthData: ', parsedAuthData);
 
+    alert('parsed authData: ' + JSON.stringify(parsedAuthData));
+    
     const credentialId = parsedAuthData.credId;
 
     // const credentialIdLength = this.getCredentialIdLength(authData);
