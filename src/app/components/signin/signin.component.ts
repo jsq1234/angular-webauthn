@@ -27,6 +27,14 @@ export class SigninComponent {
 
   constructor(private router: Router, private cognitoService: CognitoService) {}
 
+  showPassword: boolean = false;
+
+  toggleShowPassword(event: MouseEvent){
+    event.preventDefault();
+    event.stopPropagation();
+    this.showPassword = !this.showPassword;
+  }
+
   navigateToSignUp() {
     this.router.navigate(['/signup']);
   }

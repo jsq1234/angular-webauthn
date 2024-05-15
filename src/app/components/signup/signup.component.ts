@@ -23,7 +23,15 @@ export class SignupComponent {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, passwordValidator()]],
   });
+  
+  showPassword: boolean = false;
 
+  toggleShowPassword(event: MouseEvent){
+    event.preventDefault();
+    event.stopPropagation();
+    this.showPassword = !this.showPassword;
+  }
+  
   clientDataJSON: any = '';
   publicKeyCredential: any = '';
 

@@ -15,6 +15,7 @@
 /* Form group */
 .form-group {
   margin-bottom: 24px;
+  position: relative;
 }
 
 /* Form label */
@@ -163,4 +164,15 @@ h1{
   content: '✗';
   color: #ff0000;
   margin-left: 3px;
+}
+
+.eye-icon{
+  width: 20px;
+  height: 20px;
+  display: block;
+  position: absolute;
+  cursor: pointer;
+  top: 2rem;
+  right: 1rem;
+  fill: aliceblue;
 }

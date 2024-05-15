@@ -11,6 +11,7 @@
   /* Form group */
   .form-group {
     margin-bottom: 20px;
+    position: relative;
   }
   
   /* Form label */
@@ -163,4 +164,15 @@ h1{
 
 .with-password:hover::after{
   transform: rotate(180deg);
+}
+
+.eye-icon{
+  width: 20px;
+  height: 20px;
+  display: block;
+  position: absolute;
+  cursor: pointer;
+  top: 2rem;
+  right: 1rem;
+  fill: aliceblue;
 }
