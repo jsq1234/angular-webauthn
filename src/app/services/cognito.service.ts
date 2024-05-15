@@ -172,11 +172,17 @@ export class CognitoService {
 
           const parsedAuthData = parseAuthData(authenticatorData);
 
+          console.log('clientDataJSON', clientData);
+
+          console.log(`authenticatorData [${authenticatorData.byteLength}]`, authenticatorData);
+
+          console.log(`signature [${signature.byteLength}]`, signature);
+
           console.log('parsedAuthData: ', parsedAuthData);
 
           if (response) {
             challengeAnswer.response = {
-              clientDataJSON: toBase64(JSON.stringify(clientData), true),
+              clientDataJSON: fromUint8Array(new Uint8Array(response.clientDataJSON), true),
               authenticatorData: fromUint8Array(authenticatorData, true),
               signature: fromUint8Array(signature, true),
               userHandle: fromUint8Array(userHandle, true),
