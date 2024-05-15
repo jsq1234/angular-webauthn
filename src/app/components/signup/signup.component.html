@@ -38,10 +38,32 @@
         name="password" 
         required
         formControlName="password"
+        (input)="onChange()"
       />
       <div *ngIf="password.invalid && (password.dirty || password.touched)" class="alert">
         <div *ngIf="password.errors?.['required']">Password is required.</div>
-        <!-- Add more validation error messages for password if needed -->
+      </div>
+      <div style="color: aliceblue; font-weight: 500; margin-top: 10px;" class="password-validators">
+        <div [class.error]="(password.dirty || password.touched) && password.hasError('hasLowerCase')" 
+            [class.valid]="(password.dirty || password.touched) && !password.hasError('hasLowerCase')" >
+          At least 1 lowercase character
+        </div>
+        <div [class.error]="(password.dirty || password.touched) && password.errors?.['hasUpperCase']" 
+            [class.valid]="(password.dirty || password.touched) && !password.errors?.['hasUpperCase']" >
+          At least 1 uppercase character
+        </div>
+        <div [class.error]="(password.dirty || password.touched) && password.errors?.['hasSpecialCharacter']" 
+            [class.valid]="(password.dirty || password.touched) && !password.errors?.['hasSpecialCharacter']" >
+          At least 1 special character
+        </div>
+        <div [class.error]="(password.dirty || password.touched) && password.errors?.['hasNumber']" 
+            [class.valid]="(password.dirty || password.touched) && !password.errors?.['hasNumber']" >
+          At least 1 number
+        </div>
+        <div [class.error]="(password.dirty || password.touched) && password.errors?.['sufficientLength']" 
+            [class.valid]="(password.dirty || password.touched) && !password.errors?.['sufficientLength']" >
+          At least 8 characters
+        </div>
       </div>
     </div>
     <button type="submit" class="submit-btn" [disabled]="myForm.invalid">Sign Up</button>

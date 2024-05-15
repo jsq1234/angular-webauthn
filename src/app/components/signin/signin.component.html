@@ -6,6 +6,14 @@
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" required minlength="3" [(ngModel)]="this.userData.username" #username="ngModel">
     </div>
+    <app-custom-checkout [(checked)]="usePassword">Login with password</app-custom-checkout>
+    <div *ngIf="usePassword" class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required [(ngModel)]="this.userData.password" #password="ngModel">
+      <div style="margin-top: 12px;">
+        <app-custom-checkout [(checked)]="useBiometric">Use biometric</app-custom-checkout>
+      </div>
+    </div>
     <button type="submit" class="submit-btn">Sign In</button>
     <p>
       Don't have an account? <a [routerLink]="['/signup']">Register</a>
@@ -17,7 +25,3 @@
       User is not verified
     </p>
 </form>
-
-<div style=" color: white; ">
-  Latest
-</div>

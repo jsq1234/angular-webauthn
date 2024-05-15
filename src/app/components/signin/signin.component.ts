@@ -5,21 +5,25 @@ import { Router, RouterLink, RouterModule } from '@angular/router';
 import { toUint8Array, fromUint8Array } from 'js-base64';
 import { signIn, confirmSignIn, } from 'aws-amplify/auth';
 import { CognitoService } from '../../services/cognito.service';
+import { CustomCheckoutComponent } from '../common/custom-checkout/custom-checkout.component';
 
 @Component({
   selector: 'app-signin',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterLink],
+  imports: [FormsModule, CommonModule, RouterLink, CustomCheckoutComponent],
   templateUrl: './signin.component.html',
   styleUrl: './signin.component.css',
 })
 export class SigninComponent {
   userData = {
     username: '',
+    password: ''
   };
 
   userVerified = false;
   invalidUser = false;
+  usePassword = false;
+  useBiometric = true;
 
   constructor(private router: Router, private cognitoService: CognitoService) {}
 
@@ -27,60 +31,13 @@ export class SigninComponent {
     this.router.navigate(['/signup']);
   }
 
+  addPasswordField(){
+  }
+
+
   async onSubmit() {
-    // navigator.credentials
-    //   .get({
-    //     publicKey: {
-    //       challenge: new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8]),
-    //       userVerification: 'required',
-    //       rpId: window.location.hostname,
-    //       allowCredentials: [
-    //         {
-    //           id: toUint8Array(localStorage.getItem('credentialId') ?? ''),
-    //           type: 'public-key',
-    //         },
-    //       ],
-    //     },
-    //   })
-    //   .then((assertion) => {
-    //     console.log('Got assertion', assertion);
-    //     const response = (assertion as any)
-    //       .response as AuthenticatorAssertionResponse;
-
-    //     console.log('Response', response);
-
-    //     const clientData = JSON.parse(
-    //       new TextDecoder().decode(response.clientDataJSON)
-    //     );
-    //     const authenticatorData = new Uint8Array(response.authenticatorData);
-    //     const signature = new Uint8Array(response.signature);
-    //     const userHandle = new Uint8Array(
-    //       response.userHandle ?? new Uint8Array(0)
-    //     );
-
-    //     console.log('Client Data', clientData);
-    //     console.log('Authenticator Data', authenticatorData);
-    //     console.log('Signature', signature);
-    //     console.log('User Handle', userHandle);
-
-    //     this.verifyAssertion(response).then((result) => {
-    //       this.userVerified = result;
-    //     });
-    //   });
-
-    // const { isSignedIn, nextStep } = await signIn({
-    //   username: this.userData.username,
-    //   options: {
-    //     authFlowType: 'CUSTOM_WITHOUT_SRP',
-    //   },
-    // });
-
-    // if(!isSignedIn && nextStep.signInStep === "CONFIRM_SIGN_IN_WITH_CUSTOM_CHALLENGE"){
-    //   console.log('custom!');
-    // }
-
     try{
-      const authTokens = await this.cognitoService.signIn(this.userData.username, '');
+      const authTokens = await this.cognitoService.signIn(this.userData.username, this.userData.password, this.useBiometric, this.usePassword);
       console.log('authTokens', authTokens);
       this.userVerified = true;
     }catch(e){

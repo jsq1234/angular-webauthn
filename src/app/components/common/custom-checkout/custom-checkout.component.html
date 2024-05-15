@@ -1,0 +1,9 @@
+<label class="custom-checkbox">
+    <input
+      type="checkbox"
+      [checked]="checked"
+      (change)="toggleChecked($event)"
+    />
+    <span class="checkmark"></span>
+    <ng-content></ng-content>
+</label>

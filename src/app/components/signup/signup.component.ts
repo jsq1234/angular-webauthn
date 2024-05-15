@@ -1,18 +1,14 @@
 import { Component } from '@angular/core';
 import {
   FormBuilder,
-  FormControl,
-  FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { WebauthnService } from '../../services/webauthn.service';
-import { signUp, confirmSignUp } from 'aws-amplify/auth';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { fromUint8Array, toBase64 } from 'js-base64';
 import { CognitoService } from '../../services/cognito.service';
-import { parseBase64url, toBase64url } from '../../services/utils';
+import { passwordValidator } from './validators';
 
 @Component({
   selector: 'app-signup',
@@ -25,7 +21,7 @@ export class SignupComponent {
   myForm = this.formBuilder.group({
     username: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required],
+    password: ['', [Validators.required, passwordValidator()]],
   });
 
   clientDataJSON: any = '';
@@ -50,6 +46,9 @@ export class SignupComponent {
     return this.myForm.controls['password'];
   }
 
+  onChange(){
+    console.log(this.password.errors);
+  }
   async onSubmit() {
     const { email, password, username } = this.myForm.value;
 

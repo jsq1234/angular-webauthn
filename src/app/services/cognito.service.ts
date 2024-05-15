@@ -95,7 +95,7 @@ export class CognitoService {
     });
   }
 
-  signIn(username: string, password: string): Promise<AuthTokens> {
+  signIn(username: string, password: string, useBiometric: boolean, usePassword: boolean): Promise<AuthTokens> {
     return new Promise((resolve, reject) => {
       const authenticationDetails = new AuthenticationDetails({
         Username: username,
@@ -198,8 +198,17 @@ export class CognitoService {
         },
       };
 
-      cognitoUser.setAuthenticationFlowType('CUSTOM_AUTH');
-      cognitoUser.initiateAuth(authenticationDetails, authCallback);
+      if(usePassword && !useBiometric){
+        cognitoUser.authenticateUser(authenticationDetails, authCallback);
+      }else if(useBiometric && !usePassword){
+        cognitoUser.setAuthenticationFlowType('CUSTOM_AUTH');
+        cognitoUser.initiateAuth(authenticationDetails, authCallback);
+      }else if(useBiometric && usePassword){
+        cognitoUser.setAuthenticationFlowType('CUSTOM_AUTH');
+        cognitoUser.authenticateUser(authenticationDetails, authCallback);
+      }else{
+        throw new Error("Must specify at least one way to authenticate!");
+      }
     });
   }
 }
