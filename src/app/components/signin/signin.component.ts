@@ -43,6 +43,7 @@ export class SigninComponent {
     }catch(e){
       console.log(e);
       this.invalidUser = true;
+      this.userVerified = false;
     }
   }
 
