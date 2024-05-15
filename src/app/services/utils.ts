@@ -115,7 +115,7 @@ export const parseAuthData = (authData: ArrayBuffer) => {
 
   authData = authData.slice(4);
 
-  console.log('length of authData', authData.byteLength);
+  console.log('length of remaining authData', authData.byteLength);
 
   if(!at || authData.byteLength === 0){
     return {
@@ -138,6 +138,8 @@ export const parseAuthData = (authData: ArrayBuffer) => {
 
   let credIdLen = new DataView(new Uint8Array(credIdLenBuf).buffer).getUint16(0);
 
+  console.log('Credential ID Length: ', credIdLen);
+
   authData = authData.slice(2);
 
   let credIdBuf = authData.slice(0, credIdLen);
@@ -146,6 +148,8 @@ export const parseAuthData = (authData: ArrayBuffer) => {
 
   authData = authData.slice(credIdLen);
 
+  console.log('Length of final authData: ', authData.byteLength);
+  
   let COSEPublicKey = authData;
 
   return {

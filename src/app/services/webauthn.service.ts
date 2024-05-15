@@ -88,17 +88,15 @@ export class WebauthnService {
 
     console.log('parsedAuthData: ', parsedAuthData);
 
-    const COSEkey = toBase64url(parsedAuthData.COSEPublicKey ?? '');
-
-    console.log('COSEKey(ArrayBuffer): ', parsedAuthData.COSEPublicKey);
-    console.log('COSEkey: ', COSEkey);
-
     let publicKeyBase64url = undefined;
 
     if(parsedAuthData.COSEPublicKey){
-      console.log('COSEKey(ArrayBuffer): ', parsedAuthData.COSEPublicKey);
+
+      console.log('COSEKey(Uint8Array): ', new Uint8Array(parsedAuthData.COSEPublicKey));
+
       const COSEKeyJSON = CBOR.decode(parsedAuthData.COSEPublicKey);
       const jwkKey = convertCOSEtoJwk(COSEKeyJSON);
+
       console.log('COSEKey(JSON): ', COSEKeyJSON);
       console.log('JWKKey: ', jwkKey);
       
