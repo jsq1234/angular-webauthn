@@ -69,10 +69,6 @@ export class SignupComponent {
     localStorage.setItem('PublicKey', publicKeyCred.publicKey);
     localStorage.setItem('CredentialId', publicKeyCred.credentialId);
 
-    this.clientDataJSON = JSON.stringify(this.webAuthnService.clientDataJSON);
-    this.publicKeyCredential = JSON.stringify(this.webAuthnService.publicKeyCredential);
-    
-    alert(JSON.stringify(this.webAuthnService.clientDataJSON));
     const cognitoUser = await this.cognitoService.signUp(
       { name: userData.username, ...userData },
       publicKeyCred

@@ -164,3 +164,24 @@ export const parseAuthData = (authData: ArrayBuffer) => {
 };
 
 
+export const convertCOSEtoJwk = (COSEPublicKey: any) => {
+  const COSEKeyType = COSEPublicKey[1]; // 2 = Elliptic Curve
+  const COSEAlg = COSEPublicKey[3]; // -7 = ES256
+  const COSECurve = COSEPublicKey[-1]; // 1 = P-256
+  const COSEX = COSEPublicKey[-2];
+  const COSEY = COSEPublicKey[-3];
+  
+  const jwkX = toBase64url(COSEX);
+  const jwkY = toBase64url(COSEY);
+
+  const jwkKey = {
+    kty: 'EC',
+    crv: 'P-256',
+    x: jwkX,
+    y: jwkY,
+    alg: 'ES256',
+    use: 'sig',
+  };
+
+  return jwkKey;
+}

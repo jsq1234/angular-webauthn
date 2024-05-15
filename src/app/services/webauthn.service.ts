@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '../interfaces/user';
-import { parseAuthData, toBase64url } from './utils';
+import { convertCOSEtoJwk, parseAuthData, toBase64url } from './utils';
 import { fromUint8Array} from 'js-base64';
 
 import CBOR from 'cbor-js';
@@ -92,11 +92,18 @@ export class WebauthnService {
 
     console.log('COSEKey(ArrayBuffer): ', parsedAuthData.COSEPublicKey);
     console.log('COSEkey: ', COSEkey);
-    if(parsedAuthData.COSEPublicKey){
-      console.log('CBOR decoded key: ', CBOR.decode(parsedAuthData.COSEPublicKey));
-    }
 
-    alert('parsed authData: ' + JSON.stringify(parsedAuthData));
+    let publicKeyBase64url = undefined;
+
+    if(parsedAuthData.COSEPublicKey){
+      console.log('COSEKey(ArrayBuffer): ', parsedAuthData.COSEPublicKey);
+      const COSEKeyJSON = CBOR.decode(parsedAuthData.COSEPublicKey);
+      const jwkKey = convertCOSEtoJwk(COSEKeyJSON);
+      console.log('COSEKey(JSON): ', COSEKeyJSON);
+      console.log('JWKKey: ', jwkKey);
+      
+      publicKeyBase64url = toBase64url(JSON.stringify(jwkKey));
+    }
 
     if(!parsedAuthData.credId){
       throw new Error('Couldn\'t fetch credential ID. Auth data doesn\'t have it');
@@ -127,7 +134,7 @@ export class WebauthnService {
 
     const pubKeyBase64Url = pubKey ? toBase64url(pubKey) : '';
 
-    return { credentialId, publicKey: COSEkey };
+    return { credentialId, publicKey: publicKeyBase64url ?? '' };
   }
 
   arrayBufferToStr(buf: ArrayBuffer) {
