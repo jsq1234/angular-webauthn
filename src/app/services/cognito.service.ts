@@ -135,13 +135,13 @@ export class CognitoService {
           console.log('Custom challenge from Cognito: ');
           console.log(challengeParameters);
 
-          const { credentialId, challenge } = challengeParameters;
+          const { credId, challenge } = challengeParameters;
           
-          if(!credentialId || !challenge){
+          if(!credId|| !challenge){
             throw new Error("Missing credentialId or challenge!");
           };
 
-          const challengeAnswer = await this.webauthnService.getCredentials(credentialId, challenge);
+          const challengeAnswer = await this.webauthnService.getCredentials(credId, challenge);
 
           console.log('challengeAnswer: ', challengeAnswer);
 
