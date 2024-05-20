@@ -89,35 +89,53 @@ export function concatenateBuffers(buffer1: ArrayBuffer, buffer2: ArrayBuffer) {
   return tmp;
 }
 
+/**
+ * Parses the authenticator data received from a WebAuthn authenticator.
+ * 
+ * @param {ArrayBuffer} authData - The authenticator data buffer.
+ * @returns {Object} - An object containing parsed values including rpIdHash, flags, counter, aaguid, credId, and COSEPublicKey.
+ * @throws {Error} - If the authData is less than 37 bytes.
+ */
 export const parseAuthData = (authData: ArrayBuffer) => {
+  // Ensure that the authenticator data is at least 37 bytes long
   if (authData.byteLength < 37) {
     throw new Error('Authenticator data must be at least 37 bytes long');
   }
 
+  // Extract the first 32 bytes which contain the SHA-256 hash of the RP ID
   let rpIdHash = authData.slice(0, 32); // 32 bytes
 
+  // Move the cursor forward by 32 bytes
   authData = authData.slice(32);
 
+  // Extract the next byte which contains various flags
   let flagsBuf = authData.slice(0, 1);
 
+  // Convert the flags buffer to an integer
   let flagsInt = new DataView(new Uint8Array(flagsBuf).buffer).getUint8(0);
 
-  let up = !!(flagsInt & 0x01);
-  let uv = !!(flagsInt & 0x04);
-  let at = !!(flagsInt & 0x40);
-  let ed = !!(flagsInt & 0x80);
+  // Extract individual flags
+  let up = !!(flagsInt & 0x01);  // User Present
+  let uv = !!(flagsInt & 0x04);  // User Verified
+  let at = !!(flagsInt & 0x40);  // Attestation Data
+  let ed = !!(flagsInt & 0x80);  // Extension Data
 
+  // Move the cursor forward by 1 byte
   authData = authData.slice(1);
 
+  // Extract the next 4 bytes which contain the signature counter
   let counterBuf = authData.slice(0, 4);
 
+  // Convert the counter buffer to an integer
   let counter = new DataView(new Uint8Array(counterBuf).buffer).getUint32(0);
 
+  // Move the cursor forward by 4 bytes
   authData = authData.slice(4);
 
-  console.log('length of remaining authData', authData.byteLength);
+  console.log('Length of remaining authData:', authData.byteLength);
 
-  if(!at || authData.byteLength === 0){
+  // If the Attestation Data flag is not set or there is no remaining data, return the parsed values so far
+  if (!at || authData.byteLength === 0) {
     return {
       rpIdHash,
       flags: {
@@ -127,31 +145,41 @@ export const parseAuthData = (authData: ArrayBuffer) => {
         ed
       },
       counter,
-    }
+    };
   }
 
+  // Extract the next 16 bytes which contain the AAGUID (Authenticator Attestation GUID)
   let aaguidBuffer = authData.slice(0, 16);
 
+  // Move the cursor forward by 16 bytes
   authData = authData.slice(16);
 
+  // Extract the next 2 bytes which contain the length of the credential ID
   let credIdLenBuf = authData.slice(0, 2);
 
+  // Convert the credential ID length buffer to an integer
   let credIdLen = new DataView(new Uint8Array(credIdLenBuf).buffer).getUint16(0);
 
-  console.log('Credential ID Length: ', credIdLen);
+  console.log('Credential ID Length:', credIdLen);
 
+  // Move the cursor forward by 2 bytes
   authData = authData.slice(2);
 
+  // Extract the credential ID using the length from the previous step
   let credIdBuf = authData.slice(0, credIdLen);
 
+  // Convert the credential ID buffer to a base64url string
   let credId = toBase64url(credIdBuf);
 
+  // Move the cursor forward by the length of the credential ID
   authData = authData.slice(credIdLen);
 
-  console.log('Length of final authData: ', authData.byteLength);
-  
+  console.log('Length of final authData:', authData.byteLength);
+
+  // The remaining bytes are the COSE encoded public key
   let COSEPublicKey = authData;
 
+  // Return the parsed values as an object
   return {
     rpIdHash,
     flags: {
@@ -166,7 +194,6 @@ export const parseAuthData = (authData: ArrayBuffer) => {
     COSEPublicKey,
   };
 };
-
 
 export const convertCOSEtoJwk = (COSEPublicKey: any) => {
   const COSEKeyType = COSEPublicKey[1]; // 2 = Elliptic Curve

@@ -51,8 +51,9 @@ export class SigninComponent {
       );
       console.log('authTokens', authTokens);
       this.userVerified = true;
-    } catch (e) {
-      console.log(e);
+    } catch (e : any) {
+      console.error(e);
+      alert(e.message || JSON.stringify(e));
       this.invalidUser = true;
       this.userVerified = false;
     }
