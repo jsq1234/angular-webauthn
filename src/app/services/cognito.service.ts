@@ -165,4 +165,22 @@ export class CognitoService {
       }
     });
   }
+
+  async resendConfirmationCode(username: string){
+    return new Promise((resolve, reject) => {
+      const cognitoUser = new CognitoUser({
+        Username: username,
+        Pool: this.userPool,
+      });
+      cognitoUser.resendConfirmationCode((err, result) => {
+        if (err) {
+          console.log(err.message || JSON.stringify(err));
+          reject('failed');
+          return;
+        }
+        console.log(result);
+        resolve(true);
+      });
+    });
+  }
 }

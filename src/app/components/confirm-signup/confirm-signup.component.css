@@ -69,3 +69,16 @@ form {
     background-color: #546d84;
     cursor: not-allowed;
   }
+
+  a{
+    color: aliceblue;
+    display: inline-block;
+    margin: 4px auto;
+    margin-bottom: 6px;
+    cursor: pointer;
+  }
+
+  a:hover{
+    font-weight: bold;
+    font-size: 15.5px;
+  }

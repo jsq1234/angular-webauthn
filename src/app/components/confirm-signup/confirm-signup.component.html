@@ -24,6 +24,7 @@
       <div *ngIf="isInvalidCode" class="error-message">
         Code invalid. Please try again.
       </div>
+      <a (click)="resendConfirmationCode()">Resend code?</a>
       <button type="submit" [disabled]="verificationForm.invalid">
         Confirm Signup
       </button>

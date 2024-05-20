@@ -37,4 +37,12 @@ export class ConfirmSignupComponent implements OnInit {
       }
     }
   }
+
+  async resendConfirmationCode(){
+    console.log('Resending code');
+    const result = await this.cognitoService.resendConfirmationCode(this.username);
+    if(result){
+      alert(`A new code has been sent to your email!`);
+    }
+  }
 }
