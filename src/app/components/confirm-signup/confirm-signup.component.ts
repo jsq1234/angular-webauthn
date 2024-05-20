@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, NgForm, Validators } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { confirmSignUp } from 'aws-amplify/auth';
 import { CognitoService } from '../../services/cognito.service';
 
 @Component({
@@ -16,6 +15,7 @@ export class ConfirmSignupComponent implements OnInit {
   isInvalidCode = false;
   verificationCode = '';
   username = '';
+
   constructor(private router: Router, 
     private activeRoute: ActivatedRoute,
     private cognitoService: CognitoService) {}

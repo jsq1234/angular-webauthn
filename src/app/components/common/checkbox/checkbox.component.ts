@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-custom-checkout',
+  selector: 'app-checkbox',
   standalone: true,
   imports: [],
-  templateUrl: './custom-checkout.component.html',
-  styleUrl: './custom-checkout.component.css'
+  templateUrl: './checkbox.component.html',
+  styleUrl: './checkbox.component.css'
 })
-export class CustomCheckoutComponent {
+export class CheckboxComponent {
   @Input() checked: boolean = false;
   @Output() checkedChange = new EventEmitter<boolean>();
 

@@ -31,9 +31,6 @@ export class SignupComponent {
     event.stopPropagation();
     this.showPassword = !this.showPassword;
   }
-  
-  clientDataJSON: any = '';
-  publicKeyCredential: any = '';
 
   constructor(
     private webAuthnService: WebauthnService,
@@ -57,7 +54,14 @@ export class SignupComponent {
   onChange(){
     console.log(this.password.errors);
   }
+
+  
   async onSubmit() {
+    if(this.myForm.invalid){
+      alert('Invalid form');
+      return ;
+    }
+
     const { email, password, username } = this.myForm.value;
 
     const userData = {
@@ -71,8 +75,7 @@ export class SignupComponent {
       ...userData,
     });
 
-    console.log('Before stringified publicKeyCred', publicKeyCred);
-
+    /* No need to store these, this is only for convenience. */
     localStorage.setItem('PublicKey', publicKeyCred.publicKey);
     localStorage.setItem('CredentialId', publicKeyCred.credentialId);
 
@@ -83,7 +86,6 @@ export class SignupComponent {
 
     if (cognitoUser) {
       console.log('User signed up successfully.');
-      console.log('Username: ', cognitoUser.getUsername());
       this.router.navigate(['/confirm-signup'], {
         queryParams: { username: userData.username },
       });
